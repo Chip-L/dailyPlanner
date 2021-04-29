@@ -22,34 +22,28 @@
 //  add eventlistener to the save button
 // determine the button and save that button's text area to local storage
 
-let timeLength;
-
-// console.log(moment().format("dddd, MMMM Do"));
-
-$("#currentDay").text(moment().format("dddd, MMMM Do"));
-
-function getUntilNextHour() {
-  let currentMinute = moment().minute();
-  let nexthour = 60 - currentMinute;
-
-  timeLength = nexthour * 60 * 1000;
-}
+// select all items in the hour block
+let hourBlockChildren = $("#hourBlock").children();
 
 function setUpdateHoursTimer() {
+  let timeLength;
+  let minutesToNextHour = 60 - moment().minute();
+
+  // set timeLength to countdown to the next hour
+  timeLength = minutesToNextHour * 60000; // convert min to ms
+
+  // start timer (probably don't need the variable)
   let updateHourTimer = setInterval(() => {
+    timeLength = 3600000; // reset interval to hourly
+    console.log("in interval", timeLength);
     setPastPresent();
   }, timeLength);
 }
 
-// select all items in the hour block
 // interate through them and if id is earlier than current hour then add past class if == to current hour then add present class
-
 function setPastPresent() {
-  let hourBlockChildren = [];
   let currentHour = moment().hours();
   let compareTag;
-
-  hourBlockChildren = $("#hourBlock").children();
 
   // currentHour = 16;
 
@@ -71,6 +65,24 @@ function setPastPresent() {
   }
 }
 
-getUntilNextHour();
+console.log(moment().format("l"));
+
+// read in events from localStorage. if they are for today, display in the proper hour
+function displayEvents() {
+  let eventList = JSON.parse(localStorage.getItem("events")) || [];
+
+  for (let index = 0; index < eventList.length; index++) {
+    if (eventList[index].date === moment().format("l")) {
+      $("#" + eventList[index].tag)
+        .eq(1)
+        .val(eventList[index]);
+    }
+  }
+}
+
+// eventList set the date at the top of the calendar
+$("#currentDay").text(moment().format("dddd, MMMM Do"));
+
+// these all execut on page load
 setUpdateHoursTimer();
 setPastPresent();
