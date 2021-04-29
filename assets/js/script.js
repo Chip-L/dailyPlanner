@@ -24,6 +24,7 @@
 
 // select all items in the hour block
 let hourBlockChildren = $("#hourBlock").children();
+let getEventList = () => JSON.parse(localStorage.getItem("events")) || [];
 
 function setUpdateHoursTimer() {
   let timeLength;
@@ -65,24 +66,64 @@ function setPastPresent() {
   }
 }
 
-console.log(moment().format("l"));
-
 // read in events from localStorage. if they are for today, display in the proper hour
 function displayEvents() {
-  let eventList = JSON.parse(localStorage.getItem("events")) || [];
+  let eventList = getEventList();
+
+  console.log("displayEvents", eventList);
 
   for (let index = 0; index < eventList.length; index++) {
-    if (eventList[index].date === moment().format("l")) {
+    // if (eventList[index].date === moment().format("l")) {
+    console.log(
       $("#" + eventList[index].tag)
+        .children()
         .eq(1)
-        .val(eventList[index]);
-    }
+    );
+    $("#" + eventList[index].tag)
+      .children()
+      .eq(1)
+      .val(eventList[index].activity);
+    // }
   }
 }
 
+// when a save button is clicked, this will grab the text from the textarea associated with that button and save it into localStorage "events"
+function saveEvents(event) {
+  event.preventDefault();
+  let target = event.target; // button clicked on
+  let eventList = getEventList();
+  let existsAtIndex = -1; // flag to check if it already exists in the eventList
+
+  // create the object
+  let newEvent = {
+    tag: $(target).closest(".row").attr("id"), // <-- why can't I just do "id" like above?
+    activity: $(target).siblings("textarea").val(),
+  };
+
+  console.log(newEvent);
+  // search the eventlist to see if the tag already exist - if so set exixtsAtIndex (I think I know how to use the array.includes() here, but it requires prototypes and other things we haven't learned. This is only 10 items, this is easier to read (and possibly shorter to write!))
+  for (let i = 0; i < eventList.length; i++) {
+    if (eventList.tag === newEvent.tag) {
+      existsAtIndex = i;
+    }
+  }
+
+  if (existsAtIndex === -1 && newEvent.activity === "") {
+    return; //nothing to save or overwrite -- leave function
+  } else if (existsAtIndex === -1) {
+    eventList.push(newEvent);
+  } else {
+    eventList.splice(existsAtIndex, 1, newEvent);
+  }
+
+  localStorage.setItem("events", JSON.stringify(eventList));
+}
 // eventList set the date at the top of the calendar
 $("#currentDay").text(moment().format("dddd, MMMM Do"));
+
+$("#hourBlock").on("click", ".saveBtn", saveEvents);
 
 // these all execut on page load
 setUpdateHoursTimer();
 setPastPresent();
+displayEvents();
