@@ -31,11 +31,14 @@ function setPastPresent() {
 
   for (let i = 0; i < hourBlockChildren.length; i++) {
     if (hourBlockChildren[i].id < compareID) {
+      $(hourBlockChildren[i]).children().eq(1).removeClass("future present");
       $(hourBlockChildren[i]).children().eq(1).addClass("past");
-      $(hourBlockChildren[i]).children().eq(1).removeClass("future");
     } else if (hourBlockChildren[i].id === compareID) {
+      $(hourBlockChildren[i]).children().eq(1).removeClass("future past");
       $(hourBlockChildren[i]).children().eq(1).addClass("present");
-      $(hourBlockChildren[i]).children().eq(1).removeClass("future");
+    } else {
+      $(hourBlockChildren[i]).children().eq(1).removeClass("present past");
+      $(hourBlockChildren[i]).children().eq(1).addClass("future");
     }
   }
 }
