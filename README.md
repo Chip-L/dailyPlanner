@@ -1,4 +1,4 @@
-"# Work Day Scheduler
+# Work Day Scheduler
 
 ## Description
 
@@ -61,4 +61,4 @@ Study Group:
 - Jared Sutch
 - Lacey Pape
 - Alex Jurgs
-- Tarik Maggio"
+- Tarik Maggio
