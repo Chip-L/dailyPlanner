@@ -33,7 +33,7 @@ function setUpdateHoursTimer() {
 
 // interate through each row and if it is earlier than current hour then add past class if == to current hour then add present class remove all other classes
 function setPastPresent() {
-  let compareID = getCompareID;
+  let compareID = getCompareID();
 
   for (let i = 0; i < hourBlockChildren.length; i++) {
     if (hourBlockChildren[i].id < compareID) {
@@ -73,6 +73,10 @@ function saveEvents(event) {
     tag: $(target).closest(".row").attr("id"),
     activity: $(target).siblings("textarea").val(),
   };
+
+  // if(newEvent.tag < getCompareID()) {
+  //   return; // can't change old events
+  // }
 
   // search the eventlist to see if the tag already exist - if so set exixtsAtIndex
   for (let i = 0; i < eventList.length; i++) {
