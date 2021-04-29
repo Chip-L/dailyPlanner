@@ -1,5 +1,5 @@
 // select all items in the hour block
-let hourBlockChildren = $("#hourBlock").children();
+let hourBlockChildren = $(".time-block");
 
 // download event list from storage
 let getEventList = () => JSON.parse(localStorage.getItem("events")) || [];
