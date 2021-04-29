@@ -1,7 +1,21 @@
 // select all items in the hour block
 let hourBlockChildren = $("#hourBlock").children();
+
+// download event list from storage
 let getEventList = () => JSON.parse(localStorage.getItem("events")) || [];
 
+// set up tag to compare against
+let getCompareID = () => {
+  let currentHour = moment().hours();
+
+  if (currentHour < 10) {
+    return "hour-09";
+  } else {
+    return "hour-" + currentHour;
+  }
+};
+
+// setup the timer to call setPastPresent() to update the page every hour
 function setUpdateHoursTimer() {
   let timeLength;
   let minutesToNextHour = 60 - moment().minute();
@@ -17,17 +31,9 @@ function setUpdateHoursTimer() {
   }, timeLength);
 }
 
-// interate through them and if id is earlier than current hour then add past class if == to current hour then add present class
+// interate through each row and if it is earlier than current hour then add past class if == to current hour then add present class remove all other classes
 function setPastPresent() {
-  let currentHour = moment().hours();
-  let compareID;
-
-  // set up tag to compare against
-  if (currentHour < 10) {
-    compareID = "hour-09";
-  } else {
-    compareID = "hour-" + currentHour;
-  }
+  let compareID = getCompareID;
 
   for (let i = 0; i < hourBlockChildren.length; i++) {
     if (hourBlockChildren[i].id < compareID) {
@@ -94,13 +100,15 @@ function saveEvents(event) {
   localStorage.setItem("events", JSON.stringify(eventList));
 }
 
-// eventList set the date at the top of the calendar
-$("#currentDay").text(moment().format("dddd, MMMM Do"));
+$(document).ready(function () {
+  // eventList set the date at the top of the calendar
+  $("#currentDay").text(moment().format("dddd, MMMM Do"));
 
-// create save button click events
-$("#hourBlock").on("click", ".saveBtn", saveEvents);
+  // create save button click events
+  $("#hourBlock").on("click", ".saveBtn", saveEvents);
 
-// these all execut on page load
-setUpdateHoursTimer();
-setPastPresent();
-displayEvents();
+  // these all execut on page load
+  setUpdateHoursTimer();
+  setPastPresent();
+  displayEvents();
+});
