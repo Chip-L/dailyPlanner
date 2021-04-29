@@ -4,7 +4,7 @@ let hourBlockChildren = $("#hourBlock").children();
 // download event list from storage
 let getEventList = () => JSON.parse(localStorage.getItem("events")) || [];
 
-// set up tag to compare against
+// set up variable to compare against
 let getCompareID = () => {
   let currentHour = moment().hours();
 
@@ -63,15 +63,13 @@ function displayEvents() {
 
 // when a save button is clicked, this will grab the text from the textarea associated with that button and save it into localStorage "events"
 function saveEvents(event) {
-  event.preventDefault();
-  let target = event.target; // button clicked on
   let eventList = getEventList();
   let existsAtIndex = -1; // flag to check if it already exists in the eventList
 
   // create the object
   let newEvent = {
-    tag: $(target).closest(".row").attr("id"),
-    activity: $(target).siblings("textarea").val(),
+    tag: $(this).closest(".row").attr("id"),
+    activity: $(this).siblings("textarea").val(),
   };
 
   // if(newEvent.tag < getCompareID()) {
@@ -109,7 +107,7 @@ $(document).ready(function () {
   $("#currentDay").text(moment().format("dddd, MMMM Do"));
 
   // create save button click events
-  $("#hourBlock").on("click", ".saveBtn", saveEvents);
+  $(".saveBtn").on("click", saveEvents);
 
   // these all execut on page load
   setUpdateHoursTimer();
